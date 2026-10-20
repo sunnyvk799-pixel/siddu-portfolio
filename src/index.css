@@ -1,0 +1,544 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  font-family: 'Space Mono', monospace;
+  color: #eaf4e5;
+  background: #060906;
+  --green: #9dff45;
+  --bright: #d3ffb5;
+  --muted: #84917d;
+  --line: #2b3926;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 50% 35%, #1b3215 0%, transparent 42%),
+    #060906;
+}
+button, a { font: inherit; }
+a { color: inherit; text-decoration: none; }
+button { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 4px;
+}
+.site { width: min(1120px, 92%); margin: auto; }
+
+.topbar {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.brand {
+  font: 900 31px 'Barlow Condensed', sans-serif;
+  letter-spacing: -2px;
+}
+.brand span { color: var(--green); }
+.topbar-label, .online, .eyebrow, .footer-label,
+.footer-note, .instruction, .watch-footnote {
+  font-size: 9px;
+  letter-spacing: 1.4px;
+}
+.topbar-label { color: var(--muted); }
+.online {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #a9da91;
+}
+.online i {
+  width: 7px;
+  height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--green);
+}
+
+.watch-page {
+  min-height: 740px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 45px 0 55px;
+}
+.eyebrow { color: var(--green); line-height: 1.8; }
+.watch-page > .eyebrow { margin: 0 0 12px; }
+.watch-page h1 {
+  margin: 0;
+  font: 900 clamp(38px, 7vw, 65px)/1 'Barlow Condensed', sans-serif;
+  letter-spacing: -1px;
+}
+.watch-page h1 span { color: var(--green); }
+.instruction {
+  margin: 16px 0 0;
+  color: #98a58f;
+  line-height: 1.8;
+  font-size: 8px;
+}
+
+/* The watch and its metallic casing */
+.watch-stage {
+  position: relative;
+  isolation: isolate;
+  width: min(390px, 88vw);
+  aspect-ratio: .9;
+  margin: 20px auto 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: pan-y;
+  user-select: none;
+  cursor: grab;
+}
+.watch-stage.is-dragging { cursor: grabbing; }
+.watch-strap {
+  position: absolute;
+  z-index: -1;
+  left: 29%;
+  width: 42%;
+  height: 30%;
+  border: 3px solid #4e5946;
+  background: repeating-linear-gradient(
+    90deg, #151b12 0 12px, #333d2c 13px 16px
+  );
+  box-shadow: inset 0 0 16px #000;
+}
+.strap-upper {
+  top: 0;
+  border-radius: 18px 18px 4px 4px;
+}
+.strap-lower {
+  bottom: 0;
+  border-radius: 4px 4px 18px 18px;
+}
+.watch-case {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 6%;
+  border-radius: 33%;
+  border: 2px solid #78856c;
+  background: linear-gradient(
+    135deg, #a1ab94, #272e23 15%, #515d47 30%,
+    #11160f 52%, #69765b 76%, #151a12
+  );
+  box-shadow:
+    0 25px 55px #000b,
+    inset 0 0 0 4px #20271b,
+    inset 0 3px 8px #e0ebd355,
+    0 0 35px #8fff3020;
+}
+.case-detail {
+  position: absolute;
+  z-index: 4;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #9ca990;
+  background: #283023;
+  box-shadow: inset 0 0 4px #000;
+}
+.case-detail-a { left: 9%; top: 9%; }
+.case-detail-b { right: 9%; bottom: 9%; }
+
+.bezel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 5%;
+  border-radius: 31%;
+  border: 3px solid #8c9980;
+  background: linear-gradient(145deg, #6b775d, #11160f 25%, #47523b);
+  box-shadow: inset 0 0 0 3px #11160e;
+}
+.dial {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 2px solid #527145;
+  border-radius: 28%;
+  background:
+    radial-gradient(circle at center, #28471e, #10200d 56%, #071006);
+  box-shadow: inset 0 0 30px #000, 0 0 16px #8eff2920;
+  transition: transform .42s cubic-bezier(.2,.75,.2,1);
+}
+.is-activating .dial {
+  filter: brightness(1.7);
+}
+.dial::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent 0 6px, #9dff4509 7px
+  );
+  pointer-events: none;
+}
+.dial::after {
+  content: "";
+  position: absolute;
+  inset: 3%;
+  border: 1px solid #9dff4538;
+  border-radius: 25%;
+  pointer-events: none;
+}
+
+.dial-slot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  width: 65px;
+  height: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px;
+  color: #80ad70;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: #081007a8;
+  cursor: pointer;
+  transition: color .2s, background .2s, border-color .2s, box-shadow .2s;
+}
+.dial-slot:hover {
+  color: #d6ffb8;
+  background: #9dff4520;
+}
+.dial-slot.selected {
+  color: #e2ffbd;
+  border-color: #aaff67;
+  background: #9dff4522;
+  box-shadow: 0 0 20px #9dff4545, inset 0 0 12px #9dff4522;
+}
+.slot-number { font-size: 7px; letter-spacing: 1px; }
+.slot-symbol {
+  font-size: 27px;
+  line-height: 1;
+  text-shadow: 0 0 12px currentColor;
+}
+
+.center-ring {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 50%;
+  width: 35%;
+  aspect-ratio: 1;
+  padding: 5px;
+  transform: translate(-50%, -50%);
+  border: 2px solid #a0ad91;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #c4d0b7, #273023 35%, #758268);
+  box-shadow: 0 0 0 4px #0b1008, 0 0 24px #9dff4540;
+}
+.center-core {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 2px solid #b6ff80;
+  border-radius: 50%;
+  color: #092205;
+  background: radial-gradient(circle at 35% 25%, #e4ffba, #78eb32 34%, #1a660d 76%);
+  box-shadow: inset 0 0 12px #efffd6, 0 0 20px #9dff45a0;
+  cursor: pointer;
+  transition: filter .2s, transform .2s;
+}
+.center-core:hover { filter: brightness(1.25); }
+.center-core:active { transform: scale(.92); }
+.center-core span {
+  font: 900 clamp(27px, 5vw, 42px) 'Barlow Condensed', sans-serif;
+}
+.side-button {
+  position: absolute;
+  top: 42%;
+  z-index: -1;
+  width: 13px;
+  height: 42px;
+  border: 1px solid #849078;
+  background: linear-gradient(90deg, #151a12, #76816a, #272e22);
+}
+.side-left { left: -11px; border-radius: 5px 0 0 5px; }
+.side-right { right: -11px; border-radius: 0 5px 5px 0; }
+
+.dial-nameplate {
+  position: absolute;
+  z-index: 5;
+  left: 9%;
+  right: 9%;
+  bottom: 6%;
+  min-height: 63px;
+  padding: 9px 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  border-top: 1px solid #9dff4550;
+  background: #071006e8;
+  box-shadow: 0 -8px 20px #07100680;
+  pointer-events: none;
+}
+.dial-nameplate span, .dial-nameplate small {
+  color: #a2ca8c;
+  font-size: 7px;
+  letter-spacing: 1px;
+}
+.dial-nameplate strong {
+  color: #d4ffb5;
+  font: 800 clamp(15px, 3.4vw, 23px)/1 'Barlow Condensed', sans-serif;
+  text-shadow: 0 0 10px #9dff4545;
+  overflow-wrap: anywhere;
+}
+
+.watch-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 6px;
+}
+.watch-controls button {
+  width: 43px;
+  height: 43px;
+  border: 1px solid #65874d;
+  color: var(--green);
+  background: #0b1309;
+  font-size: 22px;
+  cursor: pointer;
+  transition: .2s;
+}
+.watch-controls button:hover {
+  color: #081006;
+  background: var(--green);
+  box-shadow: 0 0 20px #9dff4540;
+}
+.watch-controls div {
+  min-width: 145px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.watch-controls strong { color: var(--bright); font-size: 12px; }
+.watch-controls span { color: var(--muted); font-size: 8px; letter-spacing: 1px; }
+
+.activate-main {
+  margin-top: 24px;
+  min-width: 250px;
+  padding: 14px 20px;
+  color: #081006;
+  border: 1px solid var(--green);
+  background: var(--green);
+  font-size: 10px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: .2s;
+}
+.activate-main:hover {
+  background: #d0ffab;
+  box-shadow: 0 0 24px #9dff4545;
+}
+.activate-main span { margin-right: 9px; }
+.watch-footnote {
+  color: #75856a;
+  font-size: 8px;
+  line-height: 1.8;
+}
+
+/* Contact details remain at the bottom */
+.contact-footer {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 25px;
+  padding: 26px 0;
+  border-top: 1px solid var(--line);
+}
+.contact-footer > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+}
+.footer-label { color: #829078; font-size: 8px; }
+.contact-footer strong {
+  color: var(--bright);
+  font: 700 19px 'Barlow Condensed', sans-serif;
+}
+.contact-footer a {
+  color: #c5d5ba;
+  font-size: 10px;
+}
+.contact-footer a:hover { color: var(--green); }
+.footer-note { color: #75816e; font-size: 8px; align-self: end; }
+
+/* Project endpoint */
+.detail-page { min-height: 100vh; display: flex; flex-direction: column; }
+.back-button {
+  padding: 10px 14px;
+  color: var(--green);
+  border: 1px solid #506d40;
+  background: transparent;
+  font-size: 9px;
+  cursor: pointer;
+}
+.detail-content {
+  width: min(720px, 100%);
+  margin: auto;
+  padding: 70px 0 90px;
+}
+.detail-symbol {
+  margin-top: 25px;
+  color: var(--green);
+  font-size: 65px;
+  text-shadow: 0 0 30px #9dff4545;
+}
+.detail-content h1 {
+  margin: 10px 0;
+  font: 900 clamp(42px, 8vw, 74px)/.95 'Barlow Condensed', sans-serif;
+  overflow-wrap: anywhere;
+}
+.detail-category {
+  color: var(--green);
+  font-size: 10px;
+  letter-spacing: 1.4px;
+}
+.detail-description {
+  max-width: 620px;
+  margin: 30px 0;
+  color: #b3c0aa;
+  font-size: 12px;
+  line-height: 2;
+}
+.detail-content h2 {
+  margin-top: 38px;
+  font: 700 24px 'Barlow Condensed', sans-serif;
+}
+.detail-stack { display: flex; flex-wrap: wrap; gap: 9px; }
+.detail-stack span {
+  padding: 9px 12px;
+  color: #d6e8ca;
+  border: 1px solid #3e5433;
+  background: #10170d;
+  font-size: 10px;
+}
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 38px;
+}
+.detail-actions a, .detail-actions button {
+  padding: 14px 17px;
+  border: 1px solid var(--green);
+  color: var(--green);
+  background: transparent;
+  font-size: 9px;
+  cursor: pointer;
+}
+.detail-actions a:hover, .detail-actions button:hover {
+  color: #081006;
+  background: var(--green);
+}
+.not-found { padding: 100px 0; }
+.not-found h1 { font-family: 'Barlow Condensed', sans-serif; }
+.not-found a { color: var(--green); }
+
+@media (max-width: 600px) {
+  .site { width: 92%; }
+  .topbar { height: 60px; }
+  .topbar-label { display: none; }
+  .online { font-size: 8px; }
+  .watch-page { padding-top: 38px; min-height: auto; }
+  .watch-page h1 { font-size: clamp(39px, 10vw, 55px); }
+  .instruction { max-width: 290px; }
+  .watch-stage { width: min(355px, 91vw); }
+  .dial-slot { width: 57px; height: 62px; }
+  .slot-symbol { font-size: 24px; }
+  .contact-footer { display: grid; grid-template-columns: 1fr 1fr; }
+  .footer-note { align-self: start; }
+  .detail-content { padding: 50px 0 70px; }
+}
+
+.top-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: clamp(12px, 3vw, 30px);
+}
+
+.top-links a {
+  color: #c5d5ba;
+  font-size: 10px;
+  letter-spacing: 1px;
+  transition: color 0.2s;
+}
+
+.top-links a:hover {
+  color: var(--green);
+}
+
+@media (max-width: 420px) {
+  .top-links {
+    gap: 10px;
+  }
+
+  .top-links a {
+    font-size: 8px;
+    letter-spacing: 0;
+  }
+}
+
+.mode-switch {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  width: min(320px, 90%);
+  margin: 18px auto;
+  padding: 5px;
+  border: 1px solid rgba(125, 220, 75, 0.4);
+  border-radius: 999px;
+  background: #101710;
+}
+
+.mode-switch button {
+  flex: 1;
+  padding: 11px 16px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: #a4b49e;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.mode-switch button.active {
+  background: #4b922e;
+  color: #fff;
+  box-shadow: 0 0 16px rgba(100, 255, 60, 0.24);
+}
+
+.mode-switch button:focus-visible {
+  outline: 2px solid #a5ff75;
+  outline-offset: 3px;
+}
